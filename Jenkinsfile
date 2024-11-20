@@ -2,20 +2,11 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
-        TF_VAR_region = 'us-east-1' // Example region
+        
     }
 
     stages {
-        stage('Initialize Environment') {
-            steps {
-                script {
-                    // Ensure Terraform is installed
-                    sh 'terraform --version || curl -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip && unzip /tmp/terraform.zip -d /usr/local/bin'
-                }
-            }
-        }
+        
 
         stage('Terraform Init and Plan') {
             steps {
@@ -39,7 +30,7 @@ pipeline {
                     for (folder in terraformFolders) {
                         dir(folder) {
                             echo "Applying Terraform in folder: ${folder}"
-                            sh 'terraform apply -auto-approve tfplan'
+                            //sh 'terraform apply -auto-approve tfplan'
                         }
                     }
                 }
