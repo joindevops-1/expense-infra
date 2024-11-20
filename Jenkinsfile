@@ -3,9 +3,9 @@ pipeline {
         label 'AGENT-1'
     }
 
-    environment {
+    // environment {
         
-    }
+    // }
 
     stages {
         
