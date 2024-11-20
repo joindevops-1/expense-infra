@@ -2,6 +2,9 @@ pipeline {
     agent{
         label 'AGENT-1'
     }
+    options{
+        ansiColor('xterm')
+    }
 
     // environment {
         
@@ -18,7 +21,7 @@ pipeline {
                         for (folder in terraformFolders) {
                             dir(folder) {
                                 echo "Processing folder: ${folder}"
-                                sh 'terraform init'
+                                sh 'terraform init -reconfigure'
                                 sh 'terraform plan -out=tfplan'
                             }
                         }
