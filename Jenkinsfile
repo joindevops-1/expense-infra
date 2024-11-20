@@ -10,13 +10,15 @@ pipeline {
 
         stage('Terraform Init and Plan') {
             steps {
-                script {
-                    def terraformFolders = ['00-vpc', '10-sg', '20-bastion', '30-rds']
-                    for (folder in terraformFolders) {
-                        dir(folder) {
-                            echo "Processing folder: ${folder}"
-                            sh 'terraform init'
-                            sh 'terraform plan -out=tfplan'
+                withAWS(credentials: 'aws-creds', region: 'us-east-1') {
+                    script {
+                        def terraformFolders = ['00-vpc', '10-sg', '20-bastion', '30-rds']
+                        for (folder in terraformFolders) {
+                            dir(folder) {
+                                echo "Processing folder: ${folder}"
+                                sh 'terraform init'
+                                sh 'terraform plan -out=tfplan'
+                            }
                         }
                     }
                 }
