@@ -31,13 +31,15 @@ pipeline {
 
         stage('Apply or Destroy') {
             steps {
-                script {
-                    // Apply or destroy based on user choice
-                    dir('00-vpc') {
-                        if (params.ACTION == 'apply') {
-                            sh 'terraform apply -auto-approve tfplan'
-                        } else if (params.ACTION == 'destroy') {
-                            sh 'terraform destroy -auto-approve tfplan'
+                withAWS(credentials: 'aws-creds', region: 'us-east-1') {
+                    script {
+                        // Apply or destroy based on user choice
+                        dir('00-vpc') {
+                            if (params.ACTION == 'apply') {
+                                sh 'terraform apply -auto-approve tfplan'
+                            } else if (params.ACTION == 'destroy') {
+                                sh 'terraform destroy -auto-approve tfplan'
+                            }
                         }
                     }
                 }
