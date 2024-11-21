@@ -1,0 +1,43 @@
+pipeline {
+    agent{
+        label 'AGENT-1'
+    }
+    options{
+        ansiColor('xterm')
+    }
+
+    // environment {
+        
+    // }
+
+    stages {
+        
+
+        stage('Terraform Init and Plan') {
+            steps {
+                withAWS(credentials: 'aws-creds', region: 'us-east-1') {
+                    script {
+                        sh """
+                            terraform init -reconfigure
+                            terraform plan -out=tfplan
+                        """ 
+                    }
+                }
+            }
+        }
+
+        
+    }
+
+    post {
+        always {
+            deleteDir()
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs for details.'
+        }
+    }
+}
