@@ -5,7 +5,9 @@ pipeline {
     options{
         ansiColor('xterm')
     }
-
+    parameters {
+        choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Choose the Terraform action')
+    }
     // environment {
         
     // }
@@ -22,6 +24,21 @@ pipeline {
                             terraform init -reconfigure
                             terraform plan -out=tfplan
                         """ 
+                    }
+                }
+            }
+        }
+
+        stage('Apply or Destroy') {
+            steps {
+                script {
+                    // Apply or destroy based on user choice
+                    dir('00-vpc') {
+                        if (params.ACTION == 'apply') {
+                            sh 'terraform apply -auto-approve tfplan'
+                        } else if (params.ACTION == 'destroy') {
+                            sh 'terraform destroy -auto-approve tfplan'
+                        }
                     }
                 }
             }
