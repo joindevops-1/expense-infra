@@ -18,6 +18,7 @@ pipeline {
                 withAWS(credentials: 'aws-creds', region: 'us-east-1') {
                     script {
                         sh """
+                            cd 00-vpc
                             terraform init -reconfigure
                             terraform plan -out=tfplan
                         """ 
